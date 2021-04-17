@@ -6,6 +6,17 @@ function classAttr(attrs) {
     .join(' ');
 };
 
+class Tags {
+  constructor() {
+    //this.tags_el = document.querySelect('.tags');
+  }
+  filter(t) {
+    //this.tags_el = document.querySelect('.tags');
+    console.log(t);
+  }
+}
+
+
 class Card {
   constructor(data) {
     this.data = data;
@@ -51,8 +62,38 @@ d3.csv(dataUrl, function(data) {
     .selectAll('div')
     .data(tags)
     .join('div')
-      .attr('class', 'tag')
+      .attr('class', d => `tag ${d.replace(' ', '_')}`)
       .text(d => d);
+  d3.selectAll('.tags div')
+    .on('click', function(event, tag) {
+      // Standardize class name
+      let tag_text = tag.replace(' ', '_');
+      // Add/remove tag_text from active_tags
+      document
+        .querySelector('.active_tags')
+        .classList
+        .toggle(tag_text);
+      let active_tag_names = document.querySelector('.active_tags').classList;
+      // Toggle class on tag element
+      this.classList.toggle('active');
+      // Toggle active class on cards
+      // Collect all active tag divs, if any
+      //let active_tags = document.querySelectorAll('.tags div.active');
+      let cards = document.querySelectorAll('.item');
+      cards.forEach(function (card, active_tag_names) {
+        //TODO: If card has no class names in active_tag_names, display: none
+        //classList = card.
+        console.log(active_tag_names);
+        console.log(card.classList);
+      });
+      // TODO: Logic for filtering cards based on active tags
+      // If current in active list, set to inactive (display: none)
+      // If current is inactive, set to active (display: ?)
+      //this.style.backgroundColor = 'pink';
+      //console.log(this);
+     });
+
+  //tags = new Tags();
 
   let container = d3.select('.content');
   container.selectAll('div')
