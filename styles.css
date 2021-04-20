@@ -72,6 +72,12 @@ h1 {
 .tags div.active {
   background-color: pink;
 }
+article[data-status='show'] {
+  display: grid;
+}
+article[data-status='hide'] {
+  display: none;
+}
 .content {
   grid-area: content;
   display: grid;
@@ -80,13 +86,9 @@ h1 {
   grid-gap: 10px;
   justify-content: center;
 }
-.item {
+article {
   border-radius: 5px;
   border: 1px solid grey;
-  /*
-  border: 1px solid rgb(60, 64, 67);
-  border: 1px solid #73AD21;
-  */
   height: 150px;
   display: grid;
   grid-template-columns: .5fr 1fr 1fr;
@@ -96,18 +98,18 @@ h1 {
     "meta desc desc"
     "meta desc  desc"
 }
-.item img.icon {
+article img.icon {
   grid-area: icon;
   margin-left: 10px;
   margin-top: 10px;
 }
-.item h2 {
+article h2 {
   grid-area: title;
   font-size: 2em;
   margin-right: 10px;
   margin-bottom: 10px;
 }
-.item .blurb {
+article .blurb {
   grid-area: desc;
   display: hidden;
   overflow: hidden;

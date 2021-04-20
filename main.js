@@ -4,7 +4,25 @@ function classAttr(attrs) {
   return attrs
     .map(attr => attr.replace(' ', '_'))
     .join(' ');
-};
+}
+
+function difference(setA, setB) {
+    let _difference = new Set(setA)
+    for (let elem of setB) {
+        _difference.delete(elem)
+    }
+    return _difference
+}
+
+function intersection(setA, setB) {
+    let _intersection = new Set()
+    for (let elem of setB) {
+        if (setA.has(elem)) {
+            _intersection.add(elem)
+        }
+    }
+    return _intersection
+}
 
 class Tags {
   constructor() {
@@ -53,52 +71,63 @@ d3.csv(dataUrl, function(data) {
     icon: data.icon,
   };
 }).then(function(data) {
+
+  let container = d3.select('.content');
+  container.selectAll('article')
+    .data(data)
+    .join('article')
+      .attr('class', d => classAttr(d.tags))
+      .html(d => new Card(d).render());
+
   let tags = new Set(
     data
       .reduce((acc, curVal) => acc.concat(curVal.tags), [])
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
   );
+
   d3.select('.tags')
     .selectAll('div')
     .data(tags)
     .join('div')
       .attr('class', d => `tag ${d.replace(' ', '_')}`)
       .text(d => d);
+
   d3.selectAll('.tags div')
     .on('click', function(event, tag) {
       // Standardize class name
       let tag_text = tag.replace(' ', '_');
       // Add/remove tag_text from active_tags
       document
-        .querySelector('.active_tags')
+        .querySelector('#active_tags')
         .classList
         .toggle(tag_text);
-      let active_tag_names = document.querySelector('.active_tags').classList;
+
+      let all_tag_names = new Set();
+      document.querySelectorAll('.tags div').forEach(function(node) {
+          all_tag_names.add(node.innerText.replace(' ', '_'));
+      })
+      // Get the inactive tags by performing a set operation
+      let active_tag_names = Array.from(
+        document.querySelector('#active_tags').classList
+      );
+      let inactive_tags = difference(all_tag_names, new Set(active_tag_names));
       // Toggle class on tag element
       this.classList.toggle('active');
-      // Toggle active class on cards
-      // Collect all active tag divs, if any
-      //let active_tags = document.querySelectorAll('.tags div.active');
-      let cards = document.querySelectorAll('.item');
-      cards.forEach(function (card, active_tag_names) {
-        //TODO: If card has no class names in active_tag_names, display: none
-        //classList = card.
-        console.log(active_tag_names);
-        console.log(card.classList);
-      });
-      // TODO: Logic for filtering cards based on active tags
-      // If current in active list, set to inactive (display: none)
-      // If current is inactive, set to active (display: ?)
-      //this.style.backgroundColor = 'pink';
-      //console.log(this);
-     });
+      if (active_tag_names.length > 0) {
+      // Hide articles that do not have any active tags
+        nodes = document.querySelectorAll('article');
+        nodes.forEach(node => {
+          nodeClasses = new Set(Array.from(node.classList));
+          let has_active_tags = Array.from(intersection(new Set(active_tag_names), nodeClasses)).length > 0;
+          if (has_active_tags === false) {
+            node.dataset.status = 'hide';
+          } else {
+            node.dataset.status = null;
+          }
+        })
+      } else {
+        document.querySelectorAll('article').forEach(node => node.dataset.status = null);
+      };
+    }); // close on click handler
 
-  //tags = new Tags();
-
-  let container = d3.select('.content');
-  container.selectAll('div')
-    .data(data)
-    .join('div')
-      .attr('class', d => classAttr(['item'].concat(d.tags)))
-      .html(d => new Card(d).render());
 });
