@@ -6,14 +6,6 @@ function classAttr(attrs) {
     .join(' ');
 }
 
-function difference(setA, setB) {
-    let _difference = new Set(setA)
-    for (let elem of setB) {
-        _difference.delete(elem)
-    }
-    return _difference
-}
-
 function intersection(setA, setB) {
     let _intersection = new Set()
     for (let elem of setB) {
@@ -106,27 +98,31 @@ d3.csv(dataUrl, function(data) {
       document.querySelectorAll('.tags div').forEach(function(node) {
           all_tag_names.add(node.innerText.replace(' ', '_'));
       })
-      // Get the inactive tags by performing a set operation
       let active_tag_names = Array.from(
         document.querySelector('#active_tags').classList
       );
-      let inactive_tags = difference(all_tag_names, new Set(active_tag_names));
       // Toggle class on tag element
       this.classList.toggle('active');
-      if (active_tag_names.length > 0) {
       // Hide articles that do not have any active tags
+      if (active_tag_names.length > 0) {
         nodes = document.querySelectorAll('article');
         nodes.forEach(node => {
-          nodeClasses = new Set(Array.from(node.classList));
-          let has_active_tags = Array.from(intersection(new Set(active_tag_names), nodeClasses)).length > 0;
+          nodeClasses = Array.from(node.classList);
+          let has_active_tags = Array.from(
+            intersection(
+              new Set(active_tag_names),
+              new Set(nodeClasses)
+            )
+          ).length > 0;
           if (has_active_tags === false) {
             node.dataset.status = 'hide';
           } else {
             node.dataset.status = null;
           }
         })
+      // If no active tags, display all cards
       } else {
-        document.querySelectorAll('article').forEach(node => node.dataset.status = null);
+        d3.selectAll('article').attr('data-status', null);
       };
     }); // close on click handler
 
