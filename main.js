@@ -33,7 +33,7 @@ class Card {
   }
   iconImageEl() {
     let iconFileName = this.data.icon || 'code_black_24dp.svg';
-    let imageTag = `<img class="icon" src="/images/${iconFileName}"
+    let imageTag = `<img class="icon" src="images/${iconFileName}"
       alt="source logo"`
     if (iconFileName.startsWith('code_black_24dp')) {
       imageTag += ' width=32px height=32px';
