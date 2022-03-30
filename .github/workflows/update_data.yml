@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Data Update
 
 # Controls when the workflow will run
 on:
@@ -32,5 +32,5 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          mkdir -p data/
+          curl -L -o data/sites.csv https://docs.google.com/spreadsheets/d/e/2PACX-1vQskn1VYGP0QpwFMSsLzQyvezxgvSZyO_WPCFQACXwwqTIsAuORA4apx-EPKtCHVqSWWkYfTU49C6qp/pub\?gid\=1772463569\&single\=true\&output\=csv
