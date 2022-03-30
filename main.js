@@ -1,4 +1,3 @@
-//const dataUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQskn1VYGP0QpwFMSsLzQyvezxgvSZyO_WPCFQACXwwqTIsAuORA4apx-EPKtCHVqSWWkYfTU49C6qp/pub?gid=1772463569&single=true&output=csv";
 const dataUrl = "data/sites.csv"
 
 function classAttr(attrs) {
